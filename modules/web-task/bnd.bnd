@@ -1,0 +1,7 @@
+Bundle-Name: web-task
+Bundle-SymbolicName: com.gabriel.todolist.web
+Bundle-Version: 1.0.0
+Export-Package: com.gabriel.todolist.web.constants
+Provide-Capability:\
+	liferay.language.resources;\
+		resource.bundle.base.name="content.Language"
