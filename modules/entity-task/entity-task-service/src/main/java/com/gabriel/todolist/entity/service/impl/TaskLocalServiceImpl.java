@@ -6,8 +6,11 @@
 package com.gabriel.todolist.entity.service.impl;
 
 import com.gabriel.todolist.entity.model.Task;
+import com.gabriel.todolist.entity.service.TaskLocalServiceUtil;
 import com.gabriel.todolist.entity.service.base.TaskLocalServiceBaseImpl;
 
+import com.gabriel.todolist.entity.service.constants.TaskStatus;
+import com.gabriel.todolist.entity.service.persistence.TaskPersistence;
 import com.liferay.portal.aop.AopService;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -18,40 +21,92 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * @author Brian Wing Shun Chan
  */
 @Component(
-	property = "model.class.name=com.gabriel.todolist.entity.model.Task",
-	service = AopService.class
+        property = "model.class.name=com.gabriel.todolist.entity.model.Task",
+        service = AopService.class
 )
 public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 
-	public Task addTask(String title, String description, int status, int priority, String pathImage, long parentId, ServiceContext serviceContext) throws PortalException, PortalException {
+    public Task addTask(String title, String description, int priority, String pathImage,long fileEntryId, long parentId, ServiceContext serviceContext) throws PortalException, PortalException {
 
-		Group group = GroupLocalServiceUtil.getGroup(serviceContext.getScopeGroupId());
+        Group group = GroupLocalServiceUtil.getGroup(serviceContext.getScopeGroupId());
 
-		User user = UserLocalServiceUtil.getUser(serviceContext.getUserId());
+        User user = UserLocalServiceUtil.getUser(serviceContext.getUserId());
 
-		long taskId = counterLocalService.increment(Task.class.getName());
+        long taskId = counterLocalService.increment(Task.class.getName());
 
-		Task task = createTask(taskId);
-		task.setTitle(title);
-		task.setDescription(description);
-		task.setStatus(status);
-		task.setPriority(priority);
-		task.setPathImage(pathImage);
-		task.setParentId(parentId);
+        Task task = createTask(taskId);
+        task.setTitle(title);
+        task.setDescription(description);
+        task.setStatus(TaskStatus.PENDENTE.getCodigo());
+        task.setPriority(priority);
+        task.setPathImage(pathImage);
+        task.setParentId(parentId);
+        task.setFileEntryId(fileEntryId);
 
-		task.setGroupId(group.getGroupId());
-		task.setCompanyId(group.getCompanyId());
-		task.setUserId(user.getUserId());
-		task.setUserName(user.getScreenName());
-		task.setCreateDate(serviceContext.getCreateDate());
-		task.setModifiedDate(serviceContext.getCreateDate());
+        task.setGroupId(group.getGroupId());
+        task.setCompanyId(group.getCompanyId());
+        task.setUserId(user.getUserId());
+        task.setUserName(user.getScreenName());
+        task.setCreateDate(serviceContext.getCreateDate());
+        task.setModifiedDate(serviceContext.getCreateDate());
 
-		task = taskLocalService.addTask(task);
+        task = taskLocalService.addTask(task);
 
-		return task;
-	}
+        return task;
+    }
+
+    public Task updateTask(long taskId, String title,int status, String description, int priority, String pathImage,long fileEntryId, long parentId, ServiceContext serviceContext) throws PortalException {
+
+        Task task = getTask(taskId);
+
+        if (task == null) {
+            return null;
+        }
+
+        task.setTitle(title);
+        task.setDescription(description);
+        task.setStatus(status);
+        task.setPriority(priority);
+        task.setPathImage(pathImage);
+        task.setParentId(parentId);
+        task.setFileEntryId(fileEntryId);
+        task.setModifiedDate(new Date());
+
+        task = updateTask(task);
+
+        return task;
+    }
+
+    public Task changeStatus(long taskId) throws PortalException {
+
+        Task task = getTask(taskId);
+
+        if (task == null) {
+            return null;
+        }
+
+        task.setStatus(TaskStatus.CONCLUIDO.getCodigo());
+        task.setModifiedDate(new Date());
+
+        task = updateTask(task);
+
+        return task;
+
+    }
+
+    public List<Task> getTaskByUserIdAndGroupId(long userId, long groupId) {
+        return taskPersistence.findByUserIdAndGroupId(userId, groupId);
+    }
+
+    public List<Task> getTaskByUserIdAndGroupIdAndParentId(long userId, long groupId, long parentId) {
+        return taskPersistence.findByUserIdAndGroupIdAndParentId(userId, groupId, parentId);
+    }
+
 }

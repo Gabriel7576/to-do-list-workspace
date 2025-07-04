@@ -70,7 +70,8 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
 		{"title", Types.VARCHAR}, {"description", Types.VARCHAR},
 		{"status", Types.INTEGER}, {"priority", Types.INTEGER},
-		{"pathImage", Types.VARCHAR}, {"parentId", Types.BIGINT}
+		{"pathImage", Types.VARCHAR}, {"parentId", Types.BIGINT},
+		{"fileEntryId", Types.BIGINT}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -91,10 +92,11 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		TABLE_COLUMNS_MAP.put("priority", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("pathImage", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("parentId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("fileEntryId", Types.BIGINT);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table ToDoList_Task (uuid_ VARCHAR(75) null,taskId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,title VARCHAR(75) null,description VARCHAR(75) null,status INTEGER,priority INTEGER,pathImage VARCHAR(75) null,parentId LONG)";
+		"create table ToDoList_Task (uuid_ VARCHAR(75) null,taskId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,title VARCHAR(75) null,description TEXT null,status INTEGER,priority INTEGER,pathImage TEXT null,parentId LONG,fileEntryId LONG)";
 
 	public static final String TABLE_SQL_DROP = "drop table ToDoList_Task";
 
@@ -125,31 +127,26 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long PRIORITY_COLUMN_BITMASK = 4L;
+	public static final long PARENTID_COLUMN_BITMASK = 4L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long STATUS_COLUMN_BITMASK = 8L;
+	public static final long USERID_COLUMN_BITMASK = 8L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long TASKID_COLUMN_BITMASK = 16L;
+	public static final long UUID_COLUMN_BITMASK = 16L;
 
 	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long USERID_COLUMN_BITMASK = 32L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
-	 */
-	@Deprecated
-	public static final long UUID_COLUMN_BITMASK = 64L;
+	public static final long TASKID_COLUMN_BITMASK = 32L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -268,6 +265,7 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 			attributeGetterFunctions.put("priority", Task::getPriority);
 			attributeGetterFunctions.put("pathImage", Task::getPathImage);
 			attributeGetterFunctions.put("parentId", Task::getParentId);
+			attributeGetterFunctions.put("fileEntryId", Task::getFileEntryId);
 
 			_attributeGetterFunctions = Collections.unmodifiableMap(
 				attributeGetterFunctions);
@@ -312,6 +310,8 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 				"pathImage", (BiConsumer<Task, String>)Task::setPathImage);
 			attributeSetterBiConsumers.put(
 				"parentId", (BiConsumer<Task, Long>)Task::setParentId);
+			attributeSetterBiConsumers.put(
+				"fileEntryId", (BiConsumer<Task, Long>)Task::setFileEntryId);
 
 			_attributeSetterBiConsumers = Collections.unmodifiableMap(
 				(Map)attributeSetterBiConsumers);
@@ -361,15 +361,6 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		}
 
 		_taskId = taskId;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public long getOriginalTaskId() {
-		return GetterUtil.getLong(this.<Long>getColumnOriginalValue("taskId"));
 	}
 
 	@JSON
@@ -572,16 +563,6 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		_status = status;
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public int getOriginalStatus() {
-		return GetterUtil.getInteger(
-			this.<Integer>getColumnOriginalValue("status"));
-	}
-
 	@JSON
 	@Override
 	public int getPriority() {
@@ -595,16 +576,6 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		}
 
 		_priority = priority;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public int getOriginalPriority() {
-		return GetterUtil.getInteger(
-			this.<Integer>getColumnOriginalValue("priority"));
 	}
 
 	@JSON
@@ -640,6 +611,31 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		}
 
 		_parentId = parentId;
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
+	public long getOriginalParentId() {
+		return GetterUtil.getLong(
+			this.<Long>getColumnOriginalValue("parentId"));
+	}
+
+	@JSON
+	@Override
+	public long getFileEntryId() {
+		return _fileEntryId;
+	}
+
+	@Override
+	public void setFileEntryId(long fileEntryId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_fileEntryId = fileEntryId;
 	}
 
 	@Override
@@ -718,6 +714,7 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		taskImpl.setPriority(getPriority());
 		taskImpl.setPathImage(getPathImage());
 		taskImpl.setParentId(getParentId());
+		taskImpl.setFileEntryId(getFileEntryId());
 
 		taskImpl.resetOriginalValues();
 
@@ -744,6 +741,8 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		taskImpl.setPriority(this.<Integer>getColumnOriginalValue("priority"));
 		taskImpl.setPathImage(this.<String>getColumnOriginalValue("pathImage"));
 		taskImpl.setParentId(this.<Long>getColumnOriginalValue("parentId"));
+		taskImpl.setFileEntryId(
+			this.<Long>getColumnOriginalValue("fileEntryId"));
 
 		return taskImpl;
 	}
@@ -899,6 +898,8 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 		taskCacheModel.parentId = getParentId();
 
+		taskCacheModel.fileEntryId = getFileEntryId();
+
 		return taskCacheModel;
 	}
 
@@ -974,6 +975,7 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 	private int _priority;
 	private String _pathImage;
 	private long _parentId;
+	private long _fileEntryId;
 
 	public <T> T getColumnValue(String columnName) {
 		columnName = _attributeNames.getOrDefault(columnName, columnName);
@@ -1019,6 +1021,7 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		_columnOriginalValues.put("priority", _priority);
 		_columnOriginalValues.put("pathImage", _pathImage);
 		_columnOriginalValues.put("parentId", _parentId);
+		_columnOriginalValues.put("fileEntryId", _fileEntryId);
 	}
 
 	private static final Map<String, String> _attributeNames;
@@ -1069,6 +1072,8 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		columnBitmasks.put("pathImage", 4096L);
 
 		columnBitmasks.put("parentId", 8192L);
+
+		columnBitmasks.put("fileEntryId", 16384L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

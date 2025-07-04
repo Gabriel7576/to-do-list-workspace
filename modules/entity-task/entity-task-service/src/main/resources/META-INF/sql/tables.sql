@@ -8,9 +8,10 @@ create table ToDoList_Task (
 	createDate DATE null,
 	modifiedDate DATE null,
 	title VARCHAR(75) null,
-	description VARCHAR(75) null,
+	description TEXT null,
 	status INTEGER,
 	priority INTEGER,
-	pathImage VARCHAR(75) null,
-	parentId LONG
+	pathImage TEXT null,
+	parentId LONG,
+	fileEntryId LONG
 );

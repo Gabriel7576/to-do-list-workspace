@@ -28,13 +28,13 @@ public class TaskLocalServiceWrapper
 
 	@Override
 	public com.gabriel.todolist.entity.model.Task addTask(
-			String title, String description, int status, int priority,
-			String pathImage, long parentId,
+			String title, String description, int priority, String pathImage,
+			long fileEntryId, long parentId,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _taskLocalService.addTask(
-			title, description, status, priority, pathImage, parentId,
+			title, description, priority, pathImage, fileEntryId, parentId,
 			serviceContext);
 	}
 
@@ -53,6 +53,13 @@ public class TaskLocalServiceWrapper
 		com.gabriel.todolist.entity.model.Task task) {
 
 		return _taskLocalService.addTask(task);
+	}
+
+	@Override
+	public com.gabriel.todolist.entity.model.Task changeStatus(long taskId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _taskLocalService.changeStatus(taskId);
 	}
 
 	/**
@@ -302,6 +309,22 @@ public class TaskLocalServiceWrapper
 		return _taskLocalService.getTask(taskId);
 	}
 
+	@Override
+	public java.util.List<com.gabriel.todolist.entity.model.Task>
+		getTaskByUserIdAndGroupId(long userId, long groupId) {
+
+		return _taskLocalService.getTaskByUserIdAndGroupId(userId, groupId);
+	}
+
+	@Override
+	public java.util.List<com.gabriel.todolist.entity.model.Task>
+		getTaskByUserIdAndGroupIdAndParentId(
+			long userId, long groupId, long parentId) {
+
+		return _taskLocalService.getTaskByUserIdAndGroupIdAndParentId(
+			userId, groupId, parentId);
+	}
+
 	/**
 	 * Returns the task matching the UUID and group.
 	 *
@@ -379,6 +402,18 @@ public class TaskLocalServiceWrapper
 	@Override
 	public int getTasksCount() {
 		return _taskLocalService.getTasksCount();
+	}
+
+	@Override
+	public com.gabriel.todolist.entity.model.Task updateTask(
+			long taskId, String title, int status, String description,
+			int priority, String pathImage, long fileEntryId, long parentId,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _taskLocalService.updateTask(
+			taskId, title, status, description, priority, pathImage,
+			fileEntryId, parentId, serviceContext);
 	}
 
 	/**

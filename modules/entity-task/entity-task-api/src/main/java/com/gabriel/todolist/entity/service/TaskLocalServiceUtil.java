@@ -38,13 +38,13 @@ public class TaskLocalServiceUtil {
 	 * Never modify this class directly. Add custom service methods to <code>com.gabriel.todolist.entity.service.impl.TaskLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static Task addTask(
-			String title, String description, int status, int priority,
-			String pathImage, long parentId,
+			String title, String description, int priority, String pathImage,
+			long fileEntryId, long parentId,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException {
 
 		return getService().addTask(
-			title, description, status, priority, pathImage, parentId,
+			title, description, priority, pathImage, fileEntryId, parentId,
 			serviceContext);
 	}
 
@@ -60,6 +60,10 @@ public class TaskLocalServiceUtil {
 	 */
 	public static Task addTask(Task task) {
 		return getService().addTask(task);
+	}
+
+	public static Task changeStatus(long taskId) throws PortalException {
+		return getService().changeStatus(taskId);
 	}
 
 	/**
@@ -271,6 +275,19 @@ public class TaskLocalServiceUtil {
 		return getService().getTask(taskId);
 	}
 
+	public static List<Task> getTaskByUserIdAndGroupId(
+		long userId, long groupId) {
+
+		return getService().getTaskByUserIdAndGroupId(userId, groupId);
+	}
+
+	public static List<Task> getTaskByUserIdAndGroupIdAndParentId(
+		long userId, long groupId, long parentId) {
+
+		return getService().getTaskByUserIdAndGroupIdAndParentId(
+			userId, groupId, parentId);
+	}
+
 	/**
 	 * Returns the task matching the UUID and group.
 	 *
@@ -338,6 +355,17 @@ public class TaskLocalServiceUtil {
 	 */
 	public static int getTasksCount() {
 		return getService().getTasksCount();
+	}
+
+	public static Task updateTask(
+			long taskId, String title, int status, String description,
+			int priority, String pathImage, long fileEntryId, long parentId,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws PortalException {
+
+		return getService().updateTask(
+			taskId, title, status, description, priority, pathImage,
+			fileEntryId, parentId, serviceContext);
 	}
 
 	/**

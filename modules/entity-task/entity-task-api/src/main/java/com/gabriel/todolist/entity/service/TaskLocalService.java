@@ -57,8 +57,8 @@ public interface TaskLocalService
 	 * Never modify this interface directly. Add custom service methods to <code>com.gabriel.todolist.entity.service.impl.TaskLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the task local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link TaskLocalServiceUtil} if injection and service tracking are not available.
 	 */
 	public Task addTask(
-			String title, String description, int status, int priority,
-			String pathImage, long parentId, ServiceContext serviceContext)
+			String title, String description, int priority, String pathImage,
+			long fileEntryId, long parentId, ServiceContext serviceContext)
 		throws PortalException;
 
 	/**
@@ -73,6 +73,8 @@ public interface TaskLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public Task addTask(Task task);
+
+	public Task changeStatus(long taskId) throws PortalException;
 
 	/**
 	 * @throws PortalException
@@ -243,6 +245,13 @@ public interface TaskLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Task getTask(long taskId) throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Task> getTaskByUserIdAndGroupId(long userId, long groupId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Task> getTaskByUserIdAndGroupIdAndParentId(
+		long userId, long groupId, long parentId);
+
 	/**
 	 * Returns the task matching the UUID and group.
 	 *
@@ -301,6 +310,12 @@ public interface TaskLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getTasksCount();
+
+	public Task updateTask(
+			long taskId, String title, int status, String description,
+			int priority, String pathImage, long fileEntryId, long parentId,
+			ServiceContext serviceContext)
+		throws PortalException;
 
 	/**
 	 * Updates the task in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

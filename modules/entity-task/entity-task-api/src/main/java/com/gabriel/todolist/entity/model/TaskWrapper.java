@@ -47,6 +47,7 @@ public class TaskWrapper
 		attributes.put("priority", getPriority());
 		attributes.put("pathImage", getPathImage());
 		attributes.put("parentId", getParentId());
+		attributes.put("fileEntryId", getFileEntryId());
 
 		return attributes;
 	}
@@ -136,6 +137,12 @@ public class TaskWrapper
 		if (parentId != null) {
 			setParentId(parentId);
 		}
+
+		Long fileEntryId = (Long)attributes.get("fileEntryId");
+
+		if (fileEntryId != null) {
+			setFileEntryId(fileEntryId);
+		}
 	}
 
 	@Override
@@ -171,6 +178,16 @@ public class TaskWrapper
 	@Override
 	public String getDescription() {
 		return model.getDescription();
+	}
+
+	/**
+	 * Returns the file entry ID of this task.
+	 *
+	 * @return the file entry ID of this task
+	 */
+	@Override
+	public long getFileEntryId() {
+		return model.getFileEntryId();
 	}
 
 	/**
@@ -336,6 +353,16 @@ public class TaskWrapper
 	@Override
 	public void setDescription(String description) {
 		model.setDescription(description);
+	}
+
+	/**
+	 * Sets the file entry ID of this task.
+	 *
+	 * @param fileEntryId the file entry ID of this task
+	 */
+	@Override
+	public void setFileEntryId(long fileEntryId) {
+		model.setFileEntryId(fileEntryId);
 	}
 
 	/**

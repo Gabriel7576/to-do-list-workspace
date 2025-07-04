@@ -142,6 +142,8 @@ public class TaskPersistenceTest {
 
 		newTask.setParentId(RandomTestUtil.nextLong());
 
+		newTask.setFileEntryId(RandomTestUtil.nextLong());
+
 		_tasks.add(_persistence.update(newTask));
 
 		Task existingTask = _persistence.findByPrimaryKey(
@@ -168,6 +170,8 @@ public class TaskPersistenceTest {
 		Assert.assertEquals(
 			existingTask.getPathImage(), newTask.getPathImage());
 		Assert.assertEquals(existingTask.getParentId(), newTask.getParentId());
+		Assert.assertEquals(
+			existingTask.getFileEntryId(), newTask.getFileEntryId());
 	}
 
 	@Test
@@ -198,34 +202,20 @@ public class TaskPersistenceTest {
 	}
 
 	@Test
-	public void testCountByUserId() throws Exception {
-		_persistence.countByUserId(RandomTestUtil.nextLong());
-
-		_persistence.countByUserId(0L);
-	}
-
-	@Test
-	public void testCountByTaskIdAndUserId() throws Exception {
-		_persistence.countByTaskIdAndUserId(
+	public void testCountByUserIdAndGroupId() throws Exception {
+		_persistence.countByUserIdAndGroupId(
 			RandomTestUtil.nextLong(), RandomTestUtil.nextLong());
 
-		_persistence.countByTaskIdAndUserId(0L, 0L);
+		_persistence.countByUserIdAndGroupId(0L, 0L);
 	}
 
 	@Test
-	public void testCountByStatusAndUserId() throws Exception {
-		_persistence.countByStatusAndUserId(
-			RandomTestUtil.nextInt(), RandomTestUtil.nextLong());
+	public void testCountByUserIdAndGroupIdAndParentId() throws Exception {
+		_persistence.countByUserIdAndGroupIdAndParentId(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong(),
+			RandomTestUtil.nextLong());
 
-		_persistence.countByStatusAndUserId(0, 0L);
-	}
-
-	@Test
-	public void testCountByPriorityAndUserId() throws Exception {
-		_persistence.countByPriorityAndUserId(
-			RandomTestUtil.nextInt(), RandomTestUtil.nextLong());
-
-		_persistence.countByPriorityAndUserId(0, 0L);
+		_persistence.countByUserIdAndGroupIdAndParentId(0L, 0L, 0L);
 	}
 
 	@Test
@@ -257,7 +247,7 @@ public class TaskPersistenceTest {
 			"companyId", true, "userId", true, "userName", true, "createDate",
 			true, "modifiedDate", true, "title", true, "description", true,
 			"status", true, "priority", true, "pathImage", true, "parentId",
-			true);
+			true, "fileEntryId", true);
 	}
 
 	@Test
@@ -517,17 +507,6 @@ public class TaskPersistenceTest {
 			ReflectionTestUtil.<Long>invoke(
 				task, "getColumnOriginalValue", new Class<?>[] {String.class},
 				"groupId"));
-
-		Assert.assertEquals(
-			Long.valueOf(task.getTaskId()),
-			ReflectionTestUtil.<Long>invoke(
-				task, "getColumnOriginalValue", new Class<?>[] {String.class},
-				"taskId"));
-		Assert.assertEquals(
-			Long.valueOf(task.getUserId()),
-			ReflectionTestUtil.<Long>invoke(
-				task, "getColumnOriginalValue", new Class<?>[] {String.class},
-				"userId"));
 	}
 
 	protected Task addTask() throws Exception {
@@ -560,6 +539,8 @@ public class TaskPersistenceTest {
 		task.setPathImage(RandomTestUtil.randomString());
 
 		task.setParentId(RandomTestUtil.nextLong());
+
+		task.setFileEntryId(RandomTestUtil.nextLong());
 
 		_tasks.add(_persistence.update(task));
 

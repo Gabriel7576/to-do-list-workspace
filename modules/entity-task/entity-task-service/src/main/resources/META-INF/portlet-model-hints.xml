@@ -11,10 +11,15 @@
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
 		<field name="title" type="String" />
-		<field name="description" type="String" />
+		<field name="description" type="String">
+			<hint name="max-length">5000</hint>
+		</field>
 		<field name="status" type="int" />
 		<field name="priority" type="int" />
-		<field name="pathImage" type="String" />
+		<field name="pathImage" type="String">
+			<hint name="max-length">5000</hint>
+		</field>
 		<field name="parentId" type="long" />
+		<field name="fileEntryId" type="long" />
 	</model>
 </model-hints>

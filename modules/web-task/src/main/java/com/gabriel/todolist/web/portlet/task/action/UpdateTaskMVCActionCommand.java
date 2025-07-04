@@ -22,12 +22,17 @@ import org.osgi.service.component.annotations.Reference;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.MutableRenderParameters;
 import javax.portlet.PortletException;
 import java.io.File;
 
-@Component(property = {"javax.portlet.name=" + TaskWebPortletKeys.TASKWEB, "mvc.command.name=/task/add"}, service = MVCActionCommand.class)
-public class AddTaskMVCActionCommand implements MVCActionCommand {
+@Component(
+        property = {
+                "javax.portlet.name=" + TaskWebPortletKeys.TASKWEB,
+                "mvc.command.name=/task/update"
+        },
+        service = MVCActionCommand.class
+)
+public class UpdateTaskMVCActionCommand implements MVCActionCommand {
 
     @Reference
     private TaskLocalService _taskLocalService;
@@ -35,7 +40,9 @@ public class AddTaskMVCActionCommand implements MVCActionCommand {
     @Override
     public boolean processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException {
 
+        long taskId = ParamUtil.getLong(actionRequest, "taskId");
         String title = ParamUtil.getString(actionRequest, "title");
+        int status = ParamUtil.getInteger(actionRequest, "status");
         String description = ParamUtil.getString(actionRequest, "description");
         int priority = ParamUtil.getInteger(actionRequest, "priority");
         long parentId = ParamUtil.getLong(actionRequest, "parentId");
@@ -53,14 +60,10 @@ public class AddTaskMVCActionCommand implements MVCActionCommand {
             String imagem = DLUtil.getPreviewURL(DLAppServiceUtil.getFileEntry(fileEntry.getFileEntryId()), DLAppServiceUtil.getFileEntry(fileEntry.getFileEntryId()).getFileVersion(), serviceContext.getThemeDisplay(), "");
 
 
-            _taskLocalService.addTask(title, description, priority, imagem, fileEntry.getFileEntryId(), parentId, serviceContext);
-
-            MutableRenderParameters renderParams = actionResponse.getRenderParameters();
-            renderParams.setValue("mvcRenderCommandName", "/");
-        } catch (Exception e) {
-            throw new PortletException(e);
+            _taskLocalService.updateTask(taskId, title, status, description, priority, imagem, fileEntry.getFileEntryId(), parentId, serviceContext);
+        } catch (PortalException e) {
+            throw new RuntimeException(e);
         }
-
 
         return true;
     }
@@ -77,13 +80,4 @@ public class AddTaskMVCActionCommand implements MVCActionCommand {
 
         return dlFolder.getFolderId();
     }
-
-    private ServiceContext getFileServiceContext(ActionRequest actionRequest) throws PortalException {
-
-        ServiceContext serviceContext = ServiceContextFactory.getInstance(FileEntry.class.getName(), actionRequest);
-        serviceContext.setAddGroupPermissions(true);
-        serviceContext.setAddGuestPermissions(true);
-        return serviceContext;
-    }
-
 }
