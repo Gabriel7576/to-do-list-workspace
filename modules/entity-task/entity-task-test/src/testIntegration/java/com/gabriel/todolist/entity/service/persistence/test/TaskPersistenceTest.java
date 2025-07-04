@@ -219,6 +219,15 @@ public class TaskPersistenceTest {
 	}
 
 	@Test
+	public void testCountByUserIdAndGroupIdAndStatus() throws Exception {
+		_persistence.countByUserIdAndGroupIdAndStatus(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong(),
+			RandomTestUtil.nextInt());
+
+		_persistence.countByUserIdAndGroupIdAndStatus(0L, 0L, 0);
+	}
+
+	@Test
 	public void testFindByPrimaryKeyExisting() throws Exception {
 		Task newTask = addTask();
 

@@ -33,7 +33,7 @@ import java.util.List;
 )
 public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 
-    public Task addTask(String title, String description, int priority, String pathImage,long fileEntryId, long parentId, ServiceContext serviceContext) throws PortalException, PortalException {
+    public Task addTask(String title, String description, int priority, String pathImage, long fileEntryId, long parentId, ServiceContext serviceContext) throws PortalException, PortalException {
 
         Group group = GroupLocalServiceUtil.getGroup(serviceContext.getScopeGroupId());
 
@@ -62,7 +62,7 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
         return task;
     }
 
-    public Task updateTask(long taskId, String title,int status, String description, int priority, String pathImage,long fileEntryId, long parentId, ServiceContext serviceContext) throws PortalException {
+    public Task updateTask(long taskId, String title, int status, String description, int priority, String pathImage, long fileEntryId, long parentId, ServiceContext serviceContext) throws PortalException {
 
         Task task = getTask(taskId);
 
@@ -107,6 +107,26 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 
     public List<Task> getTaskByUserIdAndGroupIdAndParentId(long userId, long groupId, long parentId) {
         return taskPersistence.findByUserIdAndGroupIdAndParentId(userId, groupId, parentId);
+    }
+
+    public List<Task> getTaskByUserIdAndGroupIdAndStatus(long userId, long groupId, int status) {
+        return taskPersistence.findByUserIdAndGroupIdAndStatus(userId, groupId, status);
+    }
+
+    public void deleteTask(long taskId, long userId, long groupId) throws PortalException {
+
+        Task task = getTask(taskId);
+
+        if (task != null) {
+            List<Task> tasks = taskPersistence.findByUserIdAndGroupIdAndParentId(userId, groupId, task.getTaskId());
+            if (!tasks.isEmpty()) {
+                for (Task entity : tasks) {
+                    deleteTask(entity);
+                }
+            }
+            deleteTask(task);
+        }
+
     }
 
 }

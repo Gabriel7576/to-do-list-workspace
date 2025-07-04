@@ -111,6 +111,12 @@ public class TaskLocalServiceUtil {
 		return getService().deleteTask(taskId);
 	}
 
+	public static void deleteTask(long taskId, long userId, long groupId)
+		throws PortalException {
+
+		getService().deleteTask(taskId, userId, groupId);
+	}
+
 	/**
 	 * Deletes the task from the database. Also notifies the appropriate model listeners.
 	 *
@@ -286,6 +292,13 @@ public class TaskLocalServiceUtil {
 
 		return getService().getTaskByUserIdAndGroupIdAndParentId(
 			userId, groupId, parentId);
+	}
+
+	public static List<Task> getTaskByUserIdAndGroupIdAndStatus(
+		long userId, long groupId, int status) {
+
+		return getService().getTaskByUserIdAndGroupIdAndStatus(
+			userId, groupId, status);
 	}
 
 	/**

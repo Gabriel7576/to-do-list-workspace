@@ -112,6 +112,9 @@ public interface TaskLocalService
 	@Indexable(type = IndexableType.DELETE)
 	public Task deleteTask(long taskId) throws PortalException;
 
+	public void deleteTask(long taskId, long userId, long groupId)
+		throws PortalException;
+
 	/**
 	 * Deletes the task from the database. Also notifies the appropriate model listeners.
 	 *
@@ -251,6 +254,10 @@ public interface TaskLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Task> getTaskByUserIdAndGroupIdAndParentId(
 		long userId, long groupId, long parentId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Task> getTaskByUserIdAndGroupIdAndStatus(
+		long userId, long groupId, int status);
 
 	/**
 	 * Returns the task matching the UUID and group.

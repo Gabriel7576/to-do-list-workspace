@@ -113,6 +113,13 @@ public class TaskLocalServiceWrapper
 		return _taskLocalService.deleteTask(taskId);
 	}
 
+	@Override
+	public void deleteTask(long taskId, long userId, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_taskLocalService.deleteTask(taskId, userId, groupId);
+	}
+
 	/**
 	 * Deletes the task from the database. Also notifies the appropriate model listeners.
 	 *
@@ -323,6 +330,15 @@ public class TaskLocalServiceWrapper
 
 		return _taskLocalService.getTaskByUserIdAndGroupIdAndParentId(
 			userId, groupId, parentId);
+	}
+
+	@Override
+	public java.util.List<com.gabriel.todolist.entity.model.Task>
+		getTaskByUserIdAndGroupIdAndStatus(
+			long userId, long groupId, int status) {
+
+		return _taskLocalService.getTaskByUserIdAndGroupIdAndStatus(
+			userId, groupId, status);
 	}
 
 	/**

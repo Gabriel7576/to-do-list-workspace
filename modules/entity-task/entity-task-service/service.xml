@@ -52,6 +52,12 @@
             <finder-column name="parentId"/>
         </finder>
 
+        <finder name="UserIdAndGroupIdAndStatus" return-type="Collection">
+            <finder-column name="userId"/>
+            <finder-column name="groupId"/>
+            <finder-column name="status"/>
+        </finder>
+
         <!-- References -->
 
         <reference entity="AssetEntry" package-path="com.liferay.portlet.asset"/>
