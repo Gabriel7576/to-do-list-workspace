@@ -1,12 +1,15 @@
-version: '3.8'
-
 services:
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: sa
-      MYSQL_DATABASE: Todolist
-      MYSQL_USER: user
-      MYSQL_PASSWORD: admin
+  todolist:
+    image: mysql
+    container_name: todolist
     ports:
       - "3306:3306"
+    expose:
+      - "3306"
+    environment:
+      - MYSQL_USER=temp
+      - MYSQL_PASSWORD=admin
+      - MYSQL_DATABASE=Todolist
+      - MYSQL_ROOT_PASSWORD=123456
+    volumes:
+      - "./conf.d:/etc/mysql/conf.d:ro"

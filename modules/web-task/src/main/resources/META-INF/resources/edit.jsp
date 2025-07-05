@@ -3,7 +3,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <portlet:actionURL name="/task/update" var="updateTaskURL" />
-
+<c:if test="${themeDisplay.isSignedIn()}">
 <%
 Task task = (Task) request.getAttribute("task");
 %>
@@ -18,7 +18,7 @@ Task task = (Task) request.getAttribute("task");
         <img src="${task.pathImage}" alt="Imagem da tarefa" width="auto" height="200"  class="image"/>
     </c:if>
 
-    <aui:input name="file" label="Imagem" type="file" accept="image/*" required="true" />
+    <aui:input name="file" label="Imagem" type="file" accept="image/*" required="true"/>
     <aui:select name="priority" label="Prioridade" showEmptyOption="false" required="true" value="${task.priority}">
         <aui:option value="2">Alta</aui:option>
         <aui:option value="1">Media</aui:option>
@@ -42,3 +42,11 @@ Task task = (Task) request.getAttribute("task");
     </portlet:renderURL>
     <a href="${cancelURL}" class="btn btn-outline-danger">Cancelar</a>
 </aui:form>
+</c:if>
+<c:if test="${!themeDisplay.isSignedIn()}">
+    <div class="container-fluid">
+        <div class="sheet">
+            <a href="${loginUrl}" class="sheet-title">Faça login para continuar</a>
+        </div>
+    </div>
+</c:if>

@@ -3,6 +3,7 @@ package com.gabriel.todolist.web.portlet.task.render;
 import com.gabriel.todolist.entity.model.Task;
 import com.gabriel.todolist.entity.service.TaskLocalService;
 import com.gabriel.todolist.web.constants.TaskWebPortletKeys;
+import com.gabriel.todolist.web.portlet.task.util.UrlLoginUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -32,6 +33,7 @@ public class ViewFormEditTaskMVCRenderCommand implements MVCRenderCommand{
 
         try {
             Task task = _taskLocalService.getTask(taskId);
+            UrlLoginUtil.createUrlLogin(renderRequest);
             renderRequest.setAttribute("task", task);
         } catch (PortalException e) {
             throw new RuntimeException(e);

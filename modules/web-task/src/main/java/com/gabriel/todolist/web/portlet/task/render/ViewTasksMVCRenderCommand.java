@@ -4,6 +4,8 @@ import com.gabriel.todolist.entity.model.Task;
 import com.gabriel.todolist.entity.service.TaskLocalService;
 import com.gabriel.todolist.web.constants.TaskWebPortletKeys;
 import com.gabriel.todolist.web.portlet.task.dto.TaskDTO;
+import com.gabriel.todolist.web.portlet.task.util.UrlLoginUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -45,6 +47,17 @@ public class ViewTasksMVCRenderCommand implements MVCRenderCommand {
             dtos.add(new TaskDTO(task, subtasks));
         }
 
+        int qtdPendentes = _taskLocalService.getTaskByUserIdAndGroupIdAndStatus(userId,groupId,0).size();
+        int qtdConcluidos = _taskLocalService.getTaskByUserIdAndGroupIdAndStatus(userId,groupId,1).size();
+
+        try {
+            UrlLoginUtil.createUrlLogin(renderRequest);
+        } catch (PortalException e) {
+            throw new RuntimeException(e);
+        }
+
+        renderRequest.setAttribute("qtdPendentes",qtdPendentes);
+        renderRequest.setAttribute("qtdConcluidos",qtdConcluidos);
         renderRequest.setAttribute("tasks",dtos);
 
         return "/view.jsp";

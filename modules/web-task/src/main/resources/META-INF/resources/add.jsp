@@ -2,7 +2,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-
+<c:if test="${themeDisplay.isSignedIn()}">
 <portlet:actionURL name="/task/add" var="addTaskURL" />
 
 <aui:form action="${addTaskURL}" method="post">
@@ -31,3 +31,11 @@
     </portlet:renderURL>
     <a href="${cancelURL}" class="btn btn-outline-danger">Cancelar</a>
 </aui:form>
+</c:if>
+<c:if test="${!themeDisplay.isSignedIn()}">
+    <div class="container-fluid">
+        <div class="sheet">
+            <a href="${loginUrl}" class="sheet-title">Faça login para continuar</a>
+        </div>
+    </div>
+</c:if>

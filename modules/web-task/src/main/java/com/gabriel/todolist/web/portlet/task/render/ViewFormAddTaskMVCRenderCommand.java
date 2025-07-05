@@ -3,6 +3,8 @@ package com.gabriel.todolist.web.portlet.task.render;
 import com.gabriel.todolist.entity.model.Task;
 import com.gabriel.todolist.entity.service.TaskLocalService;
 import com.gabriel.todolist.web.constants.TaskWebPortletKeys;
+import com.gabriel.todolist.web.portlet.task.util.UrlLoginUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -35,8 +37,13 @@ public class ViewFormAddTaskMVCRenderCommand implements MVCRenderCommand{
 
         List<Task> tasksMain = _taskLocalService.getTaskByUserIdAndGroupIdAndParentId(userId,groupId,0);
 
-        renderRequest.setAttribute("parentTasks",tasksMain);
+        try {
+            UrlLoginUtil.createUrlLogin(renderRequest);
+        } catch (PortalException e) {
+            throw new RuntimeException(e);
+        }
 
+        renderRequest.setAttribute("parentTasks",tasksMain);
 
         return "/add.jsp";
     }
